@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menu Information</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f0f8ff; /* Light blue background color */
+        margin: 0;
+        padding: 0;
+        position: relative; /* Add this line to make the body position relative */
+    }
+   .container {
+    position: relative; /* Add this line */
+    max-width: 900px;
+    margin: auto;
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+}
+    .menu-selection {
+        width: 45%;
+    }
+    .menu-details {
+        width: 45%;
+    }
+    .menu-boxes {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+    .menu-box {
+        width: calc(33.33% - 10px);
+        background-color: #ffffff;
+        border: 1px solid #dddddd;
+        padding: 15px;
+        box-sizing: border-box;
+        cursor: pointer;
+        transition: background-color 0.3s;
+        border-radius: 8px; /* Added border-radius for rounded corners */
+        box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1); /* Added box shadow for depth */
+    }
+    .menu-box:hover {
+        background-color: #f0f0f0;
+    }
+    .menu-box.active {
+        background-color: #dddddd;
+    }
+    h1 {
+        text-align: center;
+        color: #333333;
+    }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+    th, td {
+        border: 1px solid #dddddd;
+        padding: 15px;
+        text-align: left;
+    }
+
+.back-button {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background-color: #333333;
+    color: #ffffff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s; /* Smooth transition for background color */
+}
+
+.back-button:hover {
+    background-color: #555555; /* Darker shade when hovered */
+}
+
+</style>
+
+</head>
+<body>
+    <div class="container">
+        <div class="menu-selection">
+            <h1>Menu Selection</h1>
+            <div class="menu-boxes">
+                {% for item in menu_items %}
+                    <div class="menu-box" onclick="selectMenu('{{ item[0] }}')">{{ item[0] }}</div>
+                {% endfor %}
+            </div>
+            <form id="menuForm" method="POST" action="/menu" style="display: none;">
+                <input type="hidden" name="menu" id="selectedMenu">
+                <input type="submit" id="submitButton">
+            </form>
+        </div>
+        <div class="menu-details">
+            <h1>Menu Information</h1>
+            {% if menu_info is not none %}
+                <table id="menuTable">
+                    <tr>
+                        <th>Ingredient</th>
+                        <th>Quantity (kg)</th>
+                        <th>Quantity (g)</th>
+                    </tr>
+                    {% for ingredient, quantity in menu_info %}
+                        <tr>
+                            <td>{{ ingredient }}</td>
+                            <td>{{ quantity }} kg</td>
+                            <td>{{ (quantity | float) * 1000 }} g</td>
+                        </tr>
+                    {% endfor %}
+
+                    {% if cost_info %}
+                       <tr>
+    <td>Cost</td>
+    <td><b>{{ cost_info.cost }} USD</b></td> <!-- Bold text for the cost value -->
+    <td></td>
+</tr>
+<tr>
+    <td>Selling Price @75%</td>
+    <td><b>{{ "%.2f"|format(cost_info.cost * 1.75) }} USD</b></td> <!-- Bold text for the price value -->
+    <td></td>
+</tr>
+<tr>
+    <td>Selling Price @72%</td>
+    <td><b>{{ "%.2f"|format(cost_info.cost * 1.72) }} USD</b></td> <!-- Bold text for the price value -->
+    <td></td>
+</tr>
+<tr>
+    <td>Selling Price @70%</td>
+    <td><b>{{ "%.2f"|format(cost_info.cost * 1.70) }} USD</b></td> <!-- Bold text for the price value -->
+    <td></td>
+</tr>
+<tr>
+    <td>Selling Price @65%</td>
+    <td><b>{{ "%.2f"|format(cost_info.cost * 1.65) }} USD</b></td> <!-- Bold text for the price value -->
+    <td></td>
+</tr>
+<tr>
+    <td>Selling Price @60%</td>
+    <td><b>{{ "%.2f"|format(cost_info.cost * 1.60) }} USD</b></td> <!-- Bold text for the price value -->
+    <td></td>
+</tr>
+                    {% endif %}
+                </table>
+            {% endif %}
+        </div>
+    </div>
+
+   <button class="back-button" onclick="goBackToRoot()">Go Back</button>
+
+
+    <script>
+        function selectMenu(menuName) {
+            document.getElementById('selectedMenu').value = menuName;
+            document.getElementById('menuForm').submit();
+        }
+
+        function goBackToRoot() {
+            window.location.href = "http://127.0.0.1:5001/";
+        }
+    </script>
+</body>
+</html>

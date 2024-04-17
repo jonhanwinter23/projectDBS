@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menu Item Details</title>
+    <style>
+        .menu-details {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h2>Menu Item Details</h2>
+    <div class="menu-details">
+        <p><strong>Name:</strong> {{ item[1] }}</p>
+        <p><strong>Ingredients:</strong> {{ item[2] }}</p>
+        <p><strong>Quantities:</strong> {{ item[3] }}</p>
+        <p><strong>Cost:</strong> ${{ item[4] }}</p>
+        <p><strong>Selling Price (75%):</strong> ${{ item[5] }}</p>
+        <p><strong>Selling Price (72%):</strong> ${{ item[6] }}</p>
+        <p><strong>Selling Price (70%):</strong> ${{ item[7] }}</p>
+        <p><strong>Selling Price (65%):</strong> ${{ item[8] }}</p>
+        <p><strong>Selling Price (60%):</strong> ${{ item[9] }}</p>
+        <p><strong>Category:</strong> {{ item[10] }}</p>
+    </div>
+</body>
+</html>

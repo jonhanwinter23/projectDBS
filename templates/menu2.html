@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menu Categories</title>
+    <style>
+        .category-box {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin-bottom: 10px;
+            cursor: pointer;
+        }
+        .category-box:hover {
+            background-color: #f0f0f0;
+        }
+        .menu-item {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin-bottom: 10px;
+            cursor: pointer;
+        }
+        .menu-item:hover {
+            background-color: #f0f0f0;
+        }
+    </style>
+</head>
+<body>
+    <h1>Menu Categories</h1>
+
+    <div style="display: flex;">
+        <div style="flex: 1;">
+            <h2>Categories</h2>
+            {% for category in categories %}
+                <div class="category-box" onclick="showMenu('{{ category }}')">{{ category }}</div>
+            {% endfor %}
+        </div>
+        <div id="menu-container" style="flex: 3;"></div>
+    </div>
+
+  <div id="menu-details" class="menu-details">
+    <!-- Menu details will be dynamically added here -->
+</div>
+
+
+<script>
+   function selectMenu(menuName) {
+    var menuNameSelect = document.getElementById('menuNameSelect');
+    menuNameSelect.value = menuName; // Set the selected menu name in the dropdown
+
+    fetch('/get_menu_item_details?id=' + menuName)
+        .then(response => response.text())
+        .then(data => {
+            document.getElementById('menu-details').innerHTML = data;
+        });
+
+    // Submit the form
+    document.getElementById('selectedMenu').value = menuName;
+    document.getElementById('menuForm').submit();
+}
+
+
+    function showMenu(category) {
+        fetch('/get_menu_items?category=' + category)
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('menu-container').innerHTML = data;
+            });
+    }
+</script>
+</body>
+</html><!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menu Categories</title>
+    <style>
+        .category-box {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin-bottom: 10px;
+            cursor: pointer;
+        }
+        .category-box:hover {
+            background-color: #f0f0f0;
+        }
+        .menu-item {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin-bottom: 10px;
+            cursor: pointer;
+        }
+        .menu-item:hover {
+            background-color: #f0f0f0;
+        }
+    </style>
+</head>
+<body>
+    <h1>Menu Categories</h1>
+
+    <div style="display: flex;">
+        <div style="flex: 1;">
+            <h2>Categories</h2>
+            {% for category in categories %}
+                <div class="category-box" onclick="showMenu('{{ category }}')">{{ category }}</div>
+            {% endfor %}
+        </div>
+        <div id="menu-container" style="flex: 3;"></div>
+    </div>
+
+  <div id="menu-details" class="menu-details">
+    <!-- Menu details will be dynamically added here -->
+</div>
+
+
+<script>
+   function selectMenu(menuName) {
+    var menuNameSelect = document.getElementById('menuNameSelect');
+    menuNameSelect.value = menuName; // Set the selected menu name in the dropdown
+
+    fetch('/get_menu_item_details?id=' + menuName)
+        .then(response => response.text())
+        .then(data => {
+            document.getElementById('menu-details').innerHTML = data;
+        });
+
+    // Submit the form
+    document.getElementById('selectedMenu').value = menuName;
+    document.getElementById('menuForm').submit();
+}
+
+
+    function showMenu(category) {
+        fetch('/get_menu_items?category=' + category)
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('menu-container').innerHTML = data;
+            });
+    }
+</script>
+</body>
+</html>
+

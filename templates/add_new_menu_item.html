@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Add New Menu Item</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            color: #333;
+        }
+        label {
+            font-weight: bold;
+        }
+        input[type="text"],
+        input[type="number"],
+        select {
+            width: calc(100% - 10px);
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-size: 16px;
+        }
+        input[type="submit"] {
+            background-color: #4CAF50;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Add New Menu Item</h2>
+        <form method="post">
+            <label for="name">Menu Name:</label>
+            <input type="text" id="name" name="name" required><br><br>
+
+            <!-- Existing ingredient fields -->
+            {% for i in range(1, 11) %}
+            <label for="ingredient{{ i }}">Ingredient {{ i }}:</label>
+            <select id="ingredient{{ i }}" name="ingredient{{ i }}">
+                <option value="">Optional</option>
+                {% for recipe_name in recipe_names %}
+                <option value="{{ recipe_name }}">{{ recipe_name }}</option>
+                {% endfor %}
+            </select>
+            <input type="text" name="quantity{{ i }}" placeholder="Quantity" pattern="[0-9]+([.][0-9]+)?" title="Enter a number"><br><br>
+            {% endfor %}
+            <!-- Existing ingredient fields -->
+
+            <!-- New category field -->
+            <label for="category">Category:</label>
+            <input type="text" id="category" name="category" required><br><br>
+            <!-- New category field -->
+
+            <label for="price">Total Cost:</label>
+            <input type="number" id="price" name="price" step="0.01" readonly><br><br>
+
+            <button type="submit">Add Menu Item</button>
+        </form>
+    </div>
+</body>
+</html>

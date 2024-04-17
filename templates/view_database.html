@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Database</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f7f7f7;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid black;
+            padding: 10px;
+            text-align: left;
+        }
+        th:last-child, td:last-child {
+            text-align: center;
+        }
+        .actions-form {
+            display: inline-block;
+        }
+        .delete-button {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            background-color: #f44336;
+            color: #fff;
+        }
+        .delete-button:hover {
+            background-color: #d32f2f;
+        }
+        .image {
+            max-width: 100px;
+            max-height: 100px;
+        }
+        .no-image {
+            color: #888;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Recipe Database</h1>
+        <form method="post" action="/view_database">
+            <label for="category">Filter by Category:</label>
+            <select name="category" id="category">
+                <option value="">All Categories</option>
+                {% for category in categories %}
+                    <option value="{{ category[0] }}">{{ category[0] }}</option>
+                {% endfor %}
+            </select>
+            <button type="submit">Filter</button>
+        </form>
+        <table>
+            <tr>
+                <th>Name</th>
+                <th>Quantity in stock</th>
+                <th>Price (in USD)</th>
+                <th>Category</th>
+                <th>Unit</th>
+                <th>Image</th>
+                <th>Actions</th>
+            </tr>
+            {% for recipe in recipes %}
+            <tr>
+                <td>{{ recipe[0] }}</td>
+                <td>{{ recipe[1] }}</td>
+                <td>{{ recipe[2] }}</td>
+                <td>{{ recipe[3] }}</td>
+                <td>{{ recipe[4] }}</td>
+                <td>
+                    {% if recipe[5] %}
+                        <img class="image" src="/uploads/{{ recipe[5] }}" alt="Recipe Image">
+                    {% else %}
+                        <p class="no-image">No image available</p>
+                    {% endif %}
+                </td>
+                <td>
+                    <form class="actions-form" action="/delete_recipe/{{ recipe[0] }}" method="post">
+                        <button class="delete-button" type="submit">Delete</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+        <a href="/" style="display: block; text-align: center; margin-top: 20px;">Back to Home</a>
+    </div>
+</body>
+</html>

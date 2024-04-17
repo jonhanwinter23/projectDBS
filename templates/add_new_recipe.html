@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add New Recipe</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f7f7f7;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 400px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #333;
+        }
+        input[type="text"],
+        input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+        input[type="submit"] {
+            width: 100%;
+            padding: 15px;
+            background-color: #4caf50;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+        .error {
+    color: red;
+}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Add a New Recipe</h1>
+         <form action="/add_new_recipe" method="post" enctype="multipart/form-data">
+            <label for="name">Recipe Name:</label>
+            <input type="text" id="name" name="name">
+
+            <label for="quantity">Quantity:</label>
+            <input type="number" id="quantity" name="quantity">
+
+            <label for="price">Price per Unit:</label>
+            <input type="number" step="0.01" id="price" name="price">
+
+            <label for="category">Category:</label>
+            <input type="text" id="category" name="category">
+
+            <label for="unit">Unit Type:</label>
+            <input type="text" id="unit" name="unit">
+
+            <label for="image">Recipe Image (PNG or JPG):</label>
+            <input type="file" id="image" name="image">
+
+            <input type="submit" value="Submit">
+        </form>
+        {% if error %}
+    <p class="error">{{ error }}</p>
+        {% endif %}
+    </div>
+</body>
+</html>

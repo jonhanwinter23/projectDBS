@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Menu Database</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f7f7f7;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid black;
+            padding: 8px;
+            text-align: left;
+        }
+        th:last-child, td:last-child {
+            text-align: center;
+        }
+        .actions-form {
+            display: inline-block;
+        }
+        .delete-button {
+            padding: 5px 10px;
+            background-color: #f44336;
+            color: #fff;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .delete-button:hover {
+            background-color: #d32f2f;
+        }
+    </style>
+    <script>
+        // Function to format value with two decimal places
+        function formatValue(value) {
+            return parseFloat(value).toFixed(2);
+        }
+
+        // Function to format selling prices in the table
+        function formatSellingPrices() {
+            var table = document.getElementById("menu-table");
+            for (var i = 1; i < table.rows.length; i++) {
+                for (var j = 4; j <= 8; j++) {
+                    var cell = table.rows[i].cells[j];
+                    cell.textContent = formatValue(cell.textContent);
+                }
+            }
+        }
+
+        // Call the formatSellingPrices function when the page loads
+        window.onload = formatSellingPrices;
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h1>Menu Database</h1>
+        <table id="menu-table">
+            <tr>
+                <th>Name</th>
+                <th>Ingredients</th>
+                <th>Quantities</th>
+                <th>Total Cost (in USD)</th>
+                <th>Selling Price (75% Profit)</th>
+                <th>Selling Price (72% Profit)</th>
+                <th>Selling Price (70% Profit)</th>
+                <th>Selling Price (65% Profit)</th>
+                <th>Selling Price (60% Profit)</th>
+                <th>Category</th> <!-- Added Category Column -->
+            </tr>
+            {% for recipe in recipes %}
+            <tr>
+                <td>{{ recipe[1] }}</td>
+                <td>{{ recipe[2] }}</td>
+                <td>{{ recipe[3] }}</td>
+                <td>{{ recipe[4] }}</td>
+                <td>{{ recipe[5] }}</td>
+                <td>{{ recipe[6] }}</td>
+                <td>{{ recipe[7] }}</td>
+                <td>{{ recipe[8] }}</td>
+                <td>{{ recipe[9] }}</td>
+                <td>{{ recipe[10] }}</td> <!-- Added Category Data -->
+            </tr>
+            {% endfor %}
+        </table>
+        <a href="/" style="display: block; text-align: center; margin-top: 20px;">Back to Home</a>
+    </div>
+</body>
+</html>

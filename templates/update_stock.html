@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Update Stock</title>
+    <script>
+        function fetchMenuItems() {
+            var selectedCategory = document.getElementById('category').value;
+            fetch('/get_menu_item', {
+                method: 'POST',
+                body: new URLSearchParams({
+                    selected_category: selectedCategory
+                }),
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                }
+            })
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('menu_items').innerHTML = data;
+            })
+            .catch(error => console.error('Error:', error));
+
+            return false; // Prevent default form submission
+        }
+    </script>
+</head>
+<body>
+    <h2>Update Kitchen Stock</h2>
+    <form id="categoryForm" method="post" onsubmit="fetchMenuItems(); return false;">
+        <label for="category">Select Category:</label><br>
+        <select id="category" name="category">
+            {% for category in categories %}
+                <option value="{{ category }}">{{ category }}</option>
+            {% endfor %}
+        </select>
+        <input type="submit" value="Show Menu Items">
+    </form>
+
+    <div id="menu_items">
+        {% if menu_items %}
+            <h3>Menu Items in {{ selected_category }}</h3>
+            <form method="post">
+                <label for="menu_name">Select Menu:</label><br>
+                <select id="menu_name" name="menu_name">
+                    {% for menu_item in menu_items %}
+                        <option value="{{ menu_item }}">{{ menu_item }}</option>
+                    {% endfor %}
+                </select><br><br>
+                <label for="quantity">Quantity:</label><br>
+                <input type="number" id="quantity" name="quantity" min="1"><br><br>
+                <input type="submit" value="Update Stock">
+            </form>
+        {% endif %}
+    </div>
+</body>
+</html>

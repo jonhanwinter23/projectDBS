@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Menu Table</title>
+    <style>
+        /* Add CSS styles for menu names */
+        .menu-box {
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 10px;
+            margin-bottom: 5px;
+            cursor: pointer;
+        }
+        .menu-box:hover {
+            background-color: #f0f0f0;
+        }
+    </style>
+</head>
+<body>
+    <div style="display: flex;">
+        <div style="flex: 1;">
+            <h2>Menu Names</h2>
+            <!-- Use styled boxes for menu names -->
+            {% for item in items %}
+                <div class="menu-box" onclick="showMenu('{{ item[1] }}')">{{ item[1] }}</div>
+            {% endfor %}
+        </div>
+        <div id="menu-details" style="flex: 3;">
+            <!-- This section will be replaced dynamically based on the selected menu name -->
+        </div>
+    </div>
+
+    <script>
+        function showMenu(menuName) {
+            var xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState == 4 && xhr.status == 200) {
+                    document.getElementById("menu-details").innerHTML = xhr.responseText;
+                }
+            };
+            xhr.open("GET", "/get_menu_details?menu_name=" + encodeURIComponent(menuName), true);
+            xhr.send();
+        }
+    </script>
+</body>
+</html>
