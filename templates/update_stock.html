@@ -2,6 +2,95 @@
 <html>
 <head>
     <title>Update Stock</title>
+        <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .menu-items-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: flex-start;
+            gap: 10px; /* Add spacing between menu items */
+        }
+
+        .menu-item-container {
+            width: 200px;
+            height: 50px;
+            border: 1px solid #ccc;
+            text-align: center;
+            cursor: pointer;
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: background-color 0.3s; /* Add smooth transition */
+        }
+
+        .menu-item-container:hover {
+            background-color: #f0f0f0; /* Highlight on hover */
+        }
+
+        .selected {
+            background-color: lightblue;
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .back-button {
+            padding: 10px 20px; /* Add padding to button */
+            background-color: #007bff; /* Change button color */
+            color: #fff; /* Change text color */
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s; /* Add smooth transition */
+        }
+
+        .back-button:hover {
+            background-color: #0056b3; /* Darker color on hover */
+        }
+
+        .popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #007bff; /* Blue background color */
+            border: 1px solid #ccc;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            z-index: 9999;
+            border-radius: 10px;
+            color: #fff;
+        }
+
+        .popup button {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+        }
+
+        .popup button:hover {
+            color: #fff; /* Change text color on hover */
+        }
+    </style>
     <script>
         function fetchMenuItems() {
             var selectedCategory = document.getElementById('category').value;
@@ -14,18 +103,134 @@
                     'Content-Type': 'application/x-www-form-urlencoded'
                 }
             })
-            .then(response => response.text())
+            .then(response => response.json())
             .then(data => {
-                document.getElementById('menu_items').innerHTML = data;
+                var menuItemsDiv = document.getElementById('menu_items');
+                menuItemsDiv.innerHTML = ''; // Clear the div
+
+                if (data.menu_items) {
+                    var h3 = document.createElement('h3');
+                    h3.textContent = 'Menu Items in ' + data.selected_category;
+                    menuItemsDiv.appendChild(h3);
+
+                    var selectedMenuItem = null; // To keep track of selected menu item
+
+                    var menuItemsContainer = document.createElement('div');
+                    menuItemsContainer.className = 'menu-items-container';
+
+                    data.menu_items.forEach(function(menu_item) {
+                        var menuItemContainer = document.createElement('div');
+                        menuItemContainer.className = 'menu-item-container';
+                        menuItemContainer.textContent = menu_item;
+                        menuItemContainer.addEventListener('click', function() {
+                            // Remove selection from previously selected item
+                            if (selectedMenuItem !== null) {
+                                selectedMenuItem.classList.remove('selected');
+                            }
+                            // Add selection to the clicked item
+                            menuItemContainer.classList.add('selected');
+                            // Update selectedMenuItem to current clicked item
+                            selectedMenuItem = menuItemContainer;
+
+                            // Update the menu item name box
+                            var menuItemNameBox = document.getElementById('selected_menu_item');
+                            menuItemNameBox.textContent = menu_item;
+                        });
+                        menuItemsContainer.appendChild(menuItemContainer);
+                    });
+
+                    menuItemsDiv.appendChild(menuItemsContainer);
+
+                    // Display box for selected menu item name
+                    var menuItemNameBox = document.createElement('div');
+                    menuItemNameBox.id = 'selected_menu_item';
+                    menuItemNameBox.textContent = 'Selected Menu Item';
+                    menuItemsDiv.appendChild(menuItemNameBox);
+
+                    var form = document.createElement('form');
+                    form.method = 'post';
+
+                    var label = document.createElement('label');
+                    label.for = 'quantity';
+                    label.textContent = 'Quantity:';
+                    form.appendChild(label);
+                    form.appendChild(document.createElement('br'));
+
+                    var input = document.createElement('input');
+                    input.type = 'number';
+                    input.id = 'quantity';
+                    input.name = 'quantity';
+                    input.min = '1';
+                    form.appendChild(input);
+                    form.appendChild(document.createElement('br'));
+                    form.appendChild(document.createElement('br'));
+
+                    // Add hidden input field to store the selected menu item name
+                    var hiddenInput = document.createElement('input');
+                    hiddenInput.type = 'hidden';
+                    hiddenInput.id = 'menu_name';
+                    hiddenInput.name = 'menu_name';
+                    form.appendChild(hiddenInput);
+
+                    var submitButton = document.createElement('input');
+                    submitButton.type = 'submit';
+                    submitButton.value = 'Update Stock';
+                    form.appendChild(submitButton);
+
+                    // Handle form submission
+                    form.addEventListener('submit', function(event) {
+                        event.preventDefault(); // Prevent default form submission
+                        // Set the value of hidden input field to the selected menu item name
+                        if (selectedMenuItem !== null) {
+                            hiddenInput.value = selectedMenuItem.textContent;
+                            // Submit the form
+                            fetch('/update_stock', { // Assuming '/update_stock' is the endpoint for updating stock
+                                method: 'POST',
+                                body: new URLSearchParams({
+                                    menu_name: selectedMenuItem.textContent,
+                                    quantity: document.getElementById('quantity').value
+                                }),
+                                headers: {
+                                    'Content-Type': 'application/x-www-form-urlencoded'
+                                }
+                            })
+                            .then(response => {
+                                if (response.ok) {
+                                    // Show success message
+                                    var popup = document.createElement('div');
+                                    popup.className = 'popup';
+                                    popup.innerHTML = '<p>Stock updated successfully</p><button onclick="closePopup()">x</button>';
+                                    document.body.appendChild(popup);
+                                } else {
+                                    // Show error message
+                                    alert('Failed to update stock');
+                                }
+                            })
+                            .catch(error => console.error('Error:', error));
+                        } else {
+                            alert('Please select a menu item.'); // Inform the user to select a menu item
+                        }
+                    });
+
+                    menuItemsDiv.appendChild(form);
+                }
             })
             .catch(error => console.error('Error:', error));
-
-            return false; // Prevent default form submission
+        }
+        function goBackToRoot() {
+            window.location.href = "http://127.0.0.1:5001/";
+        }
+        function closePopup() {
+            var popup = document.querySelector('.popup');
+            popup.parentNode.removeChild(popup);
         }
     </script>
 </head>
 <body>
-    <h2>Update Kitchen Stock</h2>
+    <div class="header-container">
+        <h2>Update Kitchen Stock</h2>
+        <button class="back-button" onclick="goBackToRoot()">Go Back</button>
+    </div>
     <form id="categoryForm" method="post" onsubmit="fetchMenuItems(); return false;">
         <label for="category">Select Category:</label><br>
         <select id="category" name="category">
@@ -36,21 +241,6 @@
         <input type="submit" value="Show Menu Items">
     </form>
 
-    <div id="menu_items">
-        {% if menu_items %}
-            <h3>Menu Items in {{ selected_category }}</h3>
-            <form method="post">
-                <label for="menu_name">Select Menu:</label><br>
-                <select id="menu_name" name="menu_name">
-                    {% for menu_item in menu_items %}
-                        <option value="{{ menu_item }}">{{ menu_item }}</option>
-                    {% endfor %}
-                </select><br><br>
-                <label for="quantity">Quantity:</label><br>
-                <input type="number" id="quantity" name="quantity" min="1"><br><br>
-                <input type="submit" value="Update Stock">
-            </form>
-        {% endif %}
-    </div>
+    <div id="menu_items"></div>
 </body>
 </html>

@@ -128,54 +128,6 @@ def add_new_menu_item():
         conn.close()
 
         return render_template('add_new_menu_item.html', recipe_names=recipe_names)
-# Function to fetch unique categories from the database
-def get_categories():
-    conn = sqlite3.connect('menu.db')
-    cursor = conn.cursor()
-    cursor.execute("SELECT DISTINCT category FROM menu")
-    categories = cursor.fetchall()
-    conn.close()
-    return categories
-# Function to fetch menu items from the database
-def get_menu_items():
-    conn = sqlite3.connect('menu.db')
-    cursor = conn.cursor()
-    cursor.execute("SELECT name FROM menu")
-    menu_items = cursor.fetchall()
-    conn.close()
-    return menu_items
-
-# Function to fetch menu information based on selected item
-def get_menu_info(menu_name):
-    conn = sqlite3.connect('menu.db')
-    cursor = conn.cursor()
-    cursor.execute("SELECT * FROM menu WHERE name=?", (menu_name,))
-    menu_info = cursor.fetchone()
-    conn.close()
-    return menu_info
-
-
-
-
-@app.route('/menu', methods=['GET', 'POST'])
-def menu():
-    menu_info = None
-    cost_info = None  # Initialize cost_info
-    if request.method == 'POST':
-        selected_menu = request.form['menu']
-        menu_info = get_menu_info(selected_menu)
-        # Check if menu_info is not None
-        if menu_info:
-            # Split the ingredients, quantities, and cost into lists
-            ingredients = menu_info[2].split(',')
-            quantities = menu_info[3].split(',')
-            cost = menu_info[4]  # Get cost directly from the database
-            # Combine the ingredients and quantities into a list of tuples
-            menu_info = list(zip(ingredients, quantities))
-            cost_info = {'cost': cost, 'selling_price': cost * 1.33}  # Calculate selling price
-    menu_items = get_menu_items()
-    return render_template('menu.html', menu_info=menu_info, menu_items=menu_items, cost_info=cost_info)
-
 
 @app.route('/cook', methods=['POST'])
 def cook():
@@ -455,14 +407,7 @@ def add_new_menu_item():
         conn.close()
 
         return render_template('add_new_menu_item.html', recipe_names=recipe_names)
-# Function to fetch unique categories from the database
-def get_categories():
-    conn = sqlite3.connect('menu.db')
-    cursor = conn.cursor()
-    cursor.execute("SELECT DISTINCT category FROM menu")
-    categories = cursor.fetchall()
-    conn.close()
-    return categories
+
 # Function to fetch menu items from the database
 def get_menu_items():
     conn = sqlite3.connect('menu.db')
@@ -481,9 +426,6 @@ def get_menu_info(menu_name):
     conn.close()
     return menu_info
 
-
-
-
 @app.route('/menu', methods=['GET', 'POST'])
 def menu():
     menu_info = None
@@ -501,22 +443,14 @@ def menu():
             menu_info = list(zip(ingredients, quantities))
             cost_info = {'cost': cost, 'selling_price': cost * 1.33}  # Calculate selling price
     menu_items = get_menu_items()
-    return render_template('menu.html', menu_info=menu_info, menu_items=menu_items, cost_info=cost_info)
+    return render_template('hi.html', menu_info=menu_info, menu_items=menu_items, cost_info=cost_info)
 
 
-@app.route('/cook', methods=['POST'])
-def cook_dishes():
-    if request.method == 'POST':
-        menu_name = request.form['menu_name']
-        quantities = request.form.getlist('quantities[]')
 
-        # Calculate the total ingredients needed
-        total_ingredients_needed = calculate_ingredients(menu_name, quantities)
 
-        # Deduct ingredients from stock
-        update_stock(total_ingredients_needed)
 
-        return jsonify({'message': 'Dishes cooked successfully!'})
+
+
 def calculate_ingredients(menu_name, quantities):
     total_ingredients_needed = {}
     try:
@@ -720,8 +654,7 @@ def update_stock():
 def get_menu_items():
     selected_category = request.form['selected_category']
     menu_items = get_menu_item(selected_category)
-    return render_template('update_stock.html', menu_items=menu_items, selected_category=selected_category)
-
+    return jsonify(menu_items=menu_items, selected_category=selected_category)
 
 if __name__ == '__main__':
     app.secret_key = 'super secret key'
